@@ -1,8 +1,9 @@
 // ==UserScript==
 // @name          Fanfiction Tools
 // @author        Ewino
-// @version       2.0.0
+// @version       2.0.1
 // @description   Enhances fanfiction.net.
+// @history       2.0.1 Changed to have better security
 // @history       2.0.0 modified to work as a firefox extension instead of using greasemonkey
 // @history       1.7.2 Small fixes for site changes (more time formatting and pages moved to https)
 // @history       1.7 Removed the "no-copy" limitation, Fixed FF.net color problems (extra-contrasted buttons and mismatched backgrounds), adjusted for new date formats (thanks phelougu!), small changes in chapter separators.
@@ -95,7 +96,7 @@ var env = {
 	nextListPageUrl: '',
 
 	/** The ~real~ window element. The unsafe one if we use GM */
-	w: (unsafeWindow || window),
+	w: (window),
 
 	/** A shortcut function to use for logging */
 	log: null
@@ -106,10 +107,9 @@ env.log = env.w.console.log;
 /** This will be called after the environment finishes initialization. it's the start-point. */
 function load() {
 	// for some reason we also run for the sharing iframe. this prevents that.
-	if (!unsafeWindow ||
-		!utils.XOR(
-			unsafeWindow.location.host.indexOf('fanfiction.net') === -1,
-			unsafeWindow.location.host.indexOf('fictionpress.com') === -1
+	if (!utils.XOR(
+			window.location.host.indexOf('fanfiction.net') === -1,
+			window.location.host.indexOf('fictionpress.com') === -1
 		)
 	) { return; }
 	loadJQuery();
@@ -596,8 +596,8 @@ features = {
 
 		var chapterLoadInterval = 0, refreshHashInterval = 0;
 
-		chapterLoadInterval = setInterval(loadChapterIfNeeded, 100);
-		refreshHashInterval = setInterval(refreshHash, 50);
+		chapterLoadInterval = setInterval(function () {loadChapterIfNeeded();}, 100);
+		refreshHashInterval = setInterval(function () {refreshHash();}, 50);
 
 		var storytextp = $('#storytextp')[0];
 
