@@ -9,6 +9,6 @@ var pageMod = require("sdk/page-mod");
 // The script replaces the page contents with a message
 pageMod.PageMod({
   include: "*.fanfiction.net",
-  contentScriptFile: ["./jquery-2.1.4.js","./jquery.minicolors.js","./jquery.lazyload.min.js","./fanfiction.net.js"],
+  contentScriptFile: ["./jquery-2.1.4.min.js","./jquery.minicolors.js","./jquery.lazyload.min.js","./fanfiction.net.js"],
   contentStyleFile: "./jquery.minicolors.css"
 });
