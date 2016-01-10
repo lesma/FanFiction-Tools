@@ -6,8 +6,8 @@
   "author": "",
   "license": "MPL-2.0",
   "repository": {
-	"type":"git",
-	"url": "https://github.com/lesma/FanFiction-Tools"
+    "type": "git",
+    "url": "https://github.com/lesma/FanFiction-Tools"
   },
-  "version": "1.0.2"
+  "version": "1.0.3"
 }
