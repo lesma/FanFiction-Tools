@@ -1,0 +1,17 @@
+{
+    "homepage_url": "https://github.com/lesma/FanFiction-Tools",
+    "name": "fanfiction-tools",
+    "manifest_version": 2,
+    "version": "1.1.0",
+    "applications": {
+	    "gecko": {
+		    "id": "jid1-APQ1424BwMIlpg@jetpack",
+		    "strict_min_version": "42.0"
+	    }
+    },
+   "content_scripts": [{
+		"matches": ["*://*.fanfiction.net/*"],
+		"js": ["Data/jquery-2.1.4.min.js", "Data/jquery.minicolors.js", "Data/jquery.lazyload.min.js", "Data/utils.js", "Data/fanfiction.net.js"],
+		"css": ["Data/jquery.minicolors.css"]
+	}]
+}

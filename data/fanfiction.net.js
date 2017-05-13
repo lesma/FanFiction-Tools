@@ -297,14 +297,14 @@ features = {
 				listEntry.remove();
 				return false;
 			}
-
+			
 			var reviewLink = listEntry.children('a[href^="/r/"]');
 			if (settings.combineReview) { reviewLink.hide(); }
 			var reviewsUrl = reviewLink.attr('href') || '';
 
 			if (reviewsUrl === '') {
 				var storyLink = listEntry.children('a[href^="/s/"]');
-				var storyUrl = storyLink.attr('href') || '';
+			    var storyUrl = storyLink.attr('href') || '';
 				var urlMatch = storyUrl.match(/\/s\/(\d+)/);
 				if (urlMatch && urlMatch[1]) {
 					var storyId = urlMatch[1];
@@ -1032,7 +1032,8 @@ features = {
 						'</div>' +
 					'</div>' +
 					'<div id="ffto-menu-footer">' +
-						'<a id="ffto-link-to-script" href="https://greasyfork.org/scripts/3337-fanfiction-tools" target="_blank">Fanfiction Tools by Ewino</a>' +
+						'<a id="ffto-link-to-script" href="https://greasyfork.org/scripts/3337-fanfiction-tools" target="_blank">Fanfiction Tools orginaly by Ewino</a>' +
+						'<a id="ffto-link-to-script" href="https://addons.mozilla.org/en-US/firefox/addon/fanfiction-tools/" target="_blank">Fanfiction Tools firefox extension by lesma</a>' +
 						'<div id="ffto-buttons">' +
 							'<input type="button" id="ffto-cancel-button" value="Cancel"/>' +
 							'<input type="button" id="ffto-reset-button" value="Reset To Default"/>' +

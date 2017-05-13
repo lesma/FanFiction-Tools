@@ -70,7 +70,6 @@ utils = {
 
 		/** Returns the current chapter by the page's url. It doesn't use the navigator because there isn't one in single-chapter stories. */
 		getCurrent: function() {
-			// http://www.fanfiction.net/s/6261249/2/Konoha_At_His_Fingertips
 			var loc = /(.*\/s\/\d+\/)(\d+)(\/[^#]*)?/i.exec(utils.getLocation());
 			return (loc && loc[2]) ? utils.parseNum(loc[2]) : 1;
 		},
