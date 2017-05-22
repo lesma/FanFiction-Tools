@@ -833,7 +833,7 @@ features = {
 				'#ffto-first-chap-sep { margin-left: 0px; }' +
 				'#ffto-sect-info LI { margin: 3px 0 }' +
 				'#ffto-menu-footer { font-size: 10px; margin-top: 2px; position: relative }' +
-				'#ffto-link-to-script { display: inline-block; right: 0pt; position: absolute; bottom: 0 }' +
+				'.ffto-link-to-script { display: inline-block; right: 0pt; bottom: 0 }' +
 				'#ffto-buttons { text-align: center; padding: 5px 0px 14px 0px; }' +
 				'#ffto-buttons INPUT[type=button] { margin: 3px }' +
 				'#ffto-menu-close-x { float: right; color: white; border: medium none; font-weight: inherit; }' +
@@ -1032,12 +1032,15 @@ features = {
 						'</div>' +
 					'</div>' +
 					'<div id="ffto-menu-footer">' +
-						'<a id="ffto-link-to-script" href="https://greasyfork.org/scripts/3337-fanfiction-tools" target="_blank">Fanfiction Tools orginaly by Ewino</a>' +
-						'<a id="ffto-link-to-script" href="https://addons.mozilla.org/en-US/firefox/addon/fanfiction-tools/" target="_blank">Fanfiction Tools firefox extension by lesma</a>' +
 						'<div id="ffto-buttons">' +
 							'<input type="button" id="ffto-cancel-button" value="Cancel"/>' +
 							'<input type="button" id="ffto-reset-button" value="Reset To Default"/>' +
 							'<input type="button" id="ffto-save-button" value="Save Changes & Refresh"/>' +
+						'</div>' +
+						'<div class="ffto-link-to-script">' +
+							'<a class="ffto-link-to-script" href="https://addons.mozilla.org/en-US/firefox/addon/fanfiction-tools/" target="_blank">Fanfiction Tools firefox extension by lesma</a>' +
+							' based upon ' +
+							'<a class="ffto-link-to-script" href="https://greasyfork.org/scripts/3337-fanfiction-tools" target="_blank">Fanfiction Tools by Ewino</a>' +
 						'</div>' +
 					'</div>' +
 				'</div>'));

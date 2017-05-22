@@ -57,7 +57,12 @@ utils = {
 		configObj.headers['User-Agent'] = 'Mozilla/4.0 (compatible) Greasemonkey';
 
 		var req = new XMLHttpRequest();
-		req.open(configObj.method || 'GET', configObj.url, true);
+		var url = configObj.url;
+		if (url.indexOf('http') < 0) {
+			url = window.location.origin + url;
+		}
+		
+		req.open(configObj.method || 'GET', url, true);
 		req.onreadystatechange = function () {
 		  if (req.readyState === 4) {
 			configObj.onload(req);

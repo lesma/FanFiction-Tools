@@ -5,3 +5,10 @@ To intall please go to https://addons.mozilla.org/en-US/firefox/addon/fanfiction
 
 v1.1
 Updated to use web extensions
+
+
+v1.1.1
+Fixed issue with extension not running
+
+v1.2.0 - 22 May 2017
+Fixed issue with autoloading of lists
