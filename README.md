@@ -14,7 +14,7 @@ v1.2.0 - 22 May 2017
 Fixed issue with autoloading of lists
 
 v1.3.0 - 22 August 2017
-Fixed issue with very long stoires in terms of vertical height
+Fixed issue with very long stories in terms of vertical height
 Fixed issue with colour picker
-Added ignoring spaces to allow 
+Added ignoring spaces in pipe separated lists which were causing unexpected behavior
 Added ability to colour based on story length rather than average word count
