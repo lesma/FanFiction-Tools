@@ -175,7 +175,10 @@ features = {
 		utils.addStyle(
 			'.nocopy { -moz-user-select: inherit !important; } ' +
 
-			'#storytextp, #storytext { -moz-user-select: inherit !important; }'
+			'#storytextp, #storytext { -moz-user-select: inherit !important; }' + 
+			
+			// Increase from firefox default 999999px to allow for very long pages when autoloading long stories
+			'html,body,div,span,p,table td,table thead { max-height:999999999px !important}'
 		);
 	},
 
