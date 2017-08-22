@@ -20,6 +20,7 @@ var defaultSettings = {
 	allowCtrlA: true,	/** Allow select all with ctrl-a. [true/false] */
 	filtersFormat: 0,	/** Format of the filters. [0/1/2/3] 0: Default, 1: Always visible (right), 2: Always visible (right, don't follow), 3: Always visible (top) */
 	colorWordCount: true,	/** Color the word counts. [true/false] */
+	colorWordStoryCount: false,	/** Color the word story counts. [true/false] */
 	colorDate:  true,	/** Color the dates. [true/false] */
 	colorComplete:  true,	/** Add a unique color to completed stories. [true/false] */
 	dateFormat: 1,	/** Format of the date. [0/1] 0:US date format, 1:UK date format */
@@ -363,6 +364,8 @@ features = {
 
 				if (settings.colorWordCount) {
 					html = html.replace(matcher[0], 'Size: <span style="color: ' + utils.getWordCountColor(wordsPerChapter) + ';"><abbr title="Average: ' + utils.getReadableNumber(wordsPerChapter) + ' words per chapter">' + totalChapters + '/' + utils.getReadableNumber(totalWords) + '</abbr></span>');
+				} else if (settings.colorWordStoryCount) {
+					html = html.replace(matcher[0], 'Size: <span style="color: ' + utils.getWordCountColor(totalWords) + ';"><abbr title="Average: ' + utils.getReadableNumber(wordsPerChapter) + ' words per chapter">' + totalChapters + '/' + utils.getReadableNumber(totalWords) + '</abbr></span>');
 				} else {
 					html = html.replace(matcher[0], 'Size: <abbr title="Average: ' + utils.getReadableNumber(wordsPerChapter) + ' words per chapter">' + totalChapters + '/' + utils.getReadableNumber(totalWords) + '</abbr>');
 				}
@@ -703,6 +706,7 @@ features = {
 			_innerLoad('colors_marked_words');
 			_innerLoad('filtersFormat');
 			_innerLoad('colorWordCount');
+			_innerLoad('colorWordStoryCount');
 			_innerLoad('word_count1');
 			_innerLoad('word_count2');
 			_innerLoad('word_count3');
@@ -720,7 +724,9 @@ features = {
 			var s2s /* settings to set */ = sett || settings;
 			function _innerSet(settName, serFunc) {
 				var value = s2s[settName];
-				if (serFunc) { value = serFunc(value); }
+				if (serFunc) {
+					value = serFunc(value); 
+				}
 				utils.setOptionValue(settName, value);
 			}
 
@@ -769,6 +775,7 @@ features = {
 			_innerSet('colors_marked_words');
 			_innerSet('filtersFormat');
 			_innerSet('colorWordCount');
+			_innerSet('colorWordStoryCount');
 			_innerSet('word_count1');
 			_innerSet('word_count2');
 			_innerSet('word_count3');
@@ -981,9 +988,12 @@ features = {
 						'<div class="fftools-options-body word-counts-tab">' +
 							'<div class="ffto-title">Word Counts</div>' +
 							'<div class="ffto-sect" id="ffto-sect-word-counts">' +
-								'<ul>' +
-									'<li><input id="ffto-color-word-counts" type="checkbox"' + (settings.colorWordCount ? ' checked="checked"' : '') + '/> <label for="ffto-color-word-counts">Color word counts</label></li>' +
-								'</ul>' +
+							
+									'<select id="ffto-colour-wordcound-stories">' +
+										'<option' + ((!settings.colorWordCount && !settings.colorWordStoryCount) ? ' selected="selected"' : '') + ' value="none">Do not color word counts</option>' +
+										'<option' + ((settings.colorWordCount && !settings.colorWordStoryCount) ? ' selected="selected"' : '') + ' value="chapter">Color word counts based on average chapter length</option>' +
+										'<option' + (settings.colorWordStoryCount ? ' selected="selected"' : '') + ' value="story">Color word counts based on story length</option>' +
+									'</select>' +
 								'<table>' +
 									'<tr>' +
 										'<td><label for="ffto-words-t1"><span style="color: ' + settings.colors_complete + '">Threshold 1:</span></label></td>' +
@@ -1096,7 +1106,8 @@ features = {
 			settings.dateOrder = utils.parseNum($('#ffto-dates-order')[0].value) || 0;
 			settings.sep = $('#ffto-date-sep')[0].value;
 			settings.fullStoryLoad = ($('#ffto-autoload-stories')[0].value === 'full');
-			settings.loadAsYouGo = ($('#ffto-autoload-stories')[0].value === 'chapter');
+			settings.loadAsYouGo = ($('#ffto-autoload-stories')[0].value === 'chapter');				
+			
 			settings.showFirstChapterSeparator = ($('#ffto-first-chap-sep')[0].checked);
 			settings.loadListsAsYouGo = $('#ffto-autoload-lists')[0].checked;
 			settings.markWords = $('#ffto-marked-words')[0].value.split('|');
@@ -1116,7 +1127,10 @@ features = {
 			settings.colors_complete = $('#ffto-colors-complete').val();
 			settings.colors_marked_words = $('#ffto-colors-marked').val();
 			settings.filtersFormat = utils.parseNum($('#ffto-filters-format')[0].value) || 0;
-			settings.colorWordCount = $('#ffto-color-word-counts')[0].checked;
+			
+			settings.colorWordStoryCount = ($('#ffto-colour-wordcound-stories')[0].value === 'story');
+			settings.colorWordCount = ($('#ffto-colour-wordcound-stories')[0].value === 'chapter');
+			
 			settings.word_count1 = $('#ffto-words-t1').val();
 			settings.word_count2 = $('#ffto-words-t2').val();
 			settings.word_count3 = $('#ffto-words-t3').val();
