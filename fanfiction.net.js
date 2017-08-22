@@ -251,7 +251,7 @@ features = {
 				var storyLang = matcher[1].toLowerCase();
 				var foundMatch = false;
 				for (var i = 0; i < settings.viewLanguages.length; i++) {
-					var vl = settings.viewLanguages[i].toLowerCase();
+					var vl = settings.viewLanguages[i].toLowerCase().trim();
 					if (vl === storyLang) {
 						foundMatch = true;
 						break;
@@ -281,7 +281,9 @@ features = {
 				var summary = matcher[1];
 				var re = new RegExp(".*("+settings.blacklistedWords.join('|')+").*", "i");
 				var matcher = summary.match(re);
-				if (matcher) { return true; }
+				if (matcher) { 
+					return true;
+				}
 			}
 		}
 
@@ -660,7 +662,9 @@ features = {
 			function _innerLoad(settName, parseFunc) {
                 parseFunc = parseFunc || null;
 				var value = utils.getOptionValue(settName);
-				if (value !== undefined && parseFunc) { value = parseFunc(value); }
+				if (value !== undefined && parseFunc) { 
+					value = parseFunc(value);
+				}
 				if (value === undefined) {
 					value = defaultSettings[settName];
 					utils.setOptionValue(settName, value);
@@ -673,7 +677,7 @@ features = {
 					var split = val.toString().split(separator);
 					var arr = [];
 					for (var i = 0; i < split.length; i++) {
-						if (split[i] !== '' && split[i] != null) {
+						if (split[i] != null && split[i].trim() !== '') {
 							arr.push(split[i]);
 						}
 					}
@@ -681,7 +685,9 @@ features = {
 				};
 			}
 
-			if (utils.getOptionValue('colorDate') === undefined) { features.settings.save(defaultSettings); }
+			if (utils.getOptionValue('colorDate') === undefined) { 
+				features.settings.save(defaultSettings);
+			}
 			_innerLoad('colorDate');
 			_innerLoad('colorComplete');
 			_innerLoad('dateFormat');
