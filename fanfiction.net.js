@@ -106,7 +106,9 @@ function load() {
 		features.formatting.doStoryPageInfo($('#profile_top span:contains(Rated:)').last());
 
 		if (chapterNavigator.length > 0) { // the story has multiple chapters!
-			if ((settings.loadAsYouGo || settings.fullStoryLoad) && settings.hideChaptersNavigator) { chapterNavigator.hide(); }
+			if ((settings.loadAsYouGo || settings.fullStoryLoad) && settings.hideChaptersNavigator) { 
+				chapterNavigator.hide();
+			}
 			env.totalChapters = utils.chapters.getCount();
 			var currentChapter = env.currentChapter = utils.chapters.getCurrent();
 
