@@ -108,6 +108,26 @@ function load() {
 		if (chapterNavigator.length > 0) { // the story has multiple chapters!
 			if ((settings.loadAsYouGo || settings.fullStoryLoad) && settings.hideChaptersNavigator) { 
 				chapterNavigator.hide();
+				chapterNavigator.prev().hide();
+				chapterNavigator.next().hide();
+			} else if (settings.fullStoryLoad && !settings.hideChaptersNavigator) {
+				chapterNavigator.next().hide();
+				chapterNavigator.first().val(1);
+				chapterNavigator.first().prev().prop("onclick", null).off().text("Jump to: ");
+				chapterNavigator.first().prop("onchange", null).off().change(function(event) {		
+					var chapter = $(this).val();
+					$([document.documentElement, document.body]).animate({
+						scrollTop: $("#GEASEMONKEYSEPARATOR" + chapter).offset().top
+					}, 100);	
+				});
+				
+				chapterNavigator.eq(1).prev().prop("onclick", null).off().text("Select chapter for review:");
+				chapterNavigator.eq(1).next().hide();
+				
+				chapterNavigator.eq(1).change(function(event) {			
+					utils.setOptionValue("ReviewChapterChanged",true);
+				});
+				
 			}
 			env.totalChapters = utils.chapters.getCount();
 			var currentChapter = env.currentChapter = utils.chapters.getCurrent();
@@ -466,8 +486,10 @@ features = {
 
 		/** Starts the process of loading all chapters of a story (using a recursive function). */
 		loadFullStory: function() {
-			this._fullStoryLoadStep(1);
+			this._fullStoryLoadStep(1);		
 		},
+		
+		
 
 		/**
 		 * Loads a chapter with the intention of loading the next one after it (until all chapters are loaded).
@@ -477,7 +499,7 @@ features = {
 			var chapNum = chapterNum;
 
 			// if we're not at the end, be prepared to load the next chapter after loading this one.
-			var callback = (chapNum < env.totalChapters) ? function() { features.autoLoad._fullStoryLoadStep(chapNum + 1); } : null;
+			var callback = (chapNum < env.totalChapters) ? function() { features.autoLoad._fullStoryLoadStep(chapNum + 1); } : features.autoLoad._jumpToReview;
 
 
 			if ($('#GEASEMONKEYSEPARATOR' + chapNum).length === 0) { // the chapter hasn't been loaded yet
@@ -485,6 +507,19 @@ features = {
 			} else {
 				if (callback) { callback(); }
 			}
+		},
+		
+		/**
+		Jump to revie section if the user changed the review drop down list last time, only works when showing chapter drop down and auto load full is true
+		
+		*/
+		_jumpToReview: function (){
+			if(utils.getOptionValue("ReviewChapterChanged") === true) {
+				utils.setOptionValue("ReviewChapterChanged", false);
+				$([document.documentElement, document.body]).animate({
+					scrollTop: $("#review_name_value").offset().top
+				}, 100);
+			};
 		},
 
 		autoLoadLists: function( ) {
