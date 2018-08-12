@@ -18,3 +18,9 @@ Fixed issue with very long stories in terms of vertical height
 Fixed issue with colour picker
 Added ignoring spaces in pipe separated lists which were causing unexpected behavior
 Added ability to colour based on story length rather than average word count
+
+v1.4.0 - 12 August 2018
+Updated behaviour when auto load full story is true and the chapter drop down list is shown.
+Added Support for FictionPress Site
+Added support when using fanfic filter
+Updated jQuery
