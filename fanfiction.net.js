@@ -37,6 +37,7 @@ var defaultSettings = {
 	shortenFavsFollows: true,	/** Whether to shorten favs/follows info to small symbols. [true/false] */
 	viewLanguages: [],	/** The preferred languages. Stories not of these languages won't be shown (disabled if empty) [an array of language names] */
 	showFirstChapterSeparator: true, /** Whether to show the separator/title of the first (non-ajax-loaded) chapter. [true/false] */
+	usingFanFicFilter: false, /** Indcates that the fanfic filter extnesion is also being used, and as such search should be disabled*/
 	colors_shade1: '#00B500', // Light Green
 	colors_shade2: '#008000', // Dark Green
 	colors_shade3: '#4060DD', // Light Blue
@@ -106,7 +107,29 @@ function load() {
 		features.formatting.doStoryPageInfo($('#profile_top span:contains(Rated:)').last());
 
 		if (chapterNavigator.length > 0) { // the story has multiple chapters!
-			if ((settings.loadAsYouGo || settings.fullStoryLoad) && settings.hideChaptersNavigator) { chapterNavigator.hide(); }
+			if ((settings.loadAsYouGo || settings.fullStoryLoad) && settings.hideChaptersNavigator) { 
+				chapterNavigator.hide();
+				chapterNavigator.prev().hide();
+				chapterNavigator.next().hide();
+			} else if (settings.fullStoryLoad && !settings.hideChaptersNavigator) {
+				chapterNavigator.next().hide();
+				chapterNavigator.first().val(1);
+				chapterNavigator.first().prev().prop("onclick", null).off().text("Jump to: ");
+				chapterNavigator.first().prop("onchange", null).off().change(function(event) {		
+					var chapter = $(this).val();
+					$([document.documentElement, document.body]).animate({
+						scrollTop: $("#GEASEMONKEYSEPARATOR" + chapter).offset().top
+					}, 100);	
+				});
+				
+				chapterNavigator.eq(1).prev().prop("onclick", null).off().text("Select chapter for review:");
+				chapterNavigator.eq(1).next().hide();
+				
+				chapterNavigator.eq(1).change(function(event) {			
+					utils.setOptionValue("ReviewChapterChanged",true);
+				});
+				
+			}
 			env.totalChapters = utils.chapters.getCount();
 			var currentChapter = env.currentChapter = utils.chapters.getCurrent();
 
@@ -158,9 +181,13 @@ function load() {
 			$("span[onclick^=\"$('#filters').modal()\"]").remove();
 		}
 
-		zlists.each(function () { features.formatting.doListEntry(this); });
+		zlists.each(function () { 
+			features.formatting.doListEntry(this); 
+		});
 
-		if (settings.loadListsAsYouGo) { features.autoLoad.autoLoadLists(); }
+		if (settings.loadListsAsYouGo && !settings.usingFanFicFilter) { 
+			features.autoLoad.autoLoadLists(); 
+		}
 
 	}
 }
@@ -299,7 +326,7 @@ features = {
 
 		doListEntry: function(listEntry) {
 			listEntry = $(listEntry);
-			if (features.shouldHideListEntry(listEntry)) {
+			if (!settings.usingFanFicFilter && features.shouldHideListEntry(listEntry)) {
 				listEntry.remove();
 				return false;
 			}
@@ -464,8 +491,10 @@ features = {
 
 		/** Starts the process of loading all chapters of a story (using a recursive function). */
 		loadFullStory: function() {
-			this._fullStoryLoadStep(1);
+			this._fullStoryLoadStep(1);		
 		},
+		
+		
 
 		/**
 		 * Loads a chapter with the intention of loading the next one after it (until all chapters are loaded).
@@ -475,7 +504,7 @@ features = {
 			var chapNum = chapterNum;
 
 			// if we're not at the end, be prepared to load the next chapter after loading this one.
-			var callback = (chapNum < env.totalChapters) ? function() { features.autoLoad._fullStoryLoadStep(chapNum + 1); } : null;
+			var callback = (chapNum < env.totalChapters) ? function() { features.autoLoad._fullStoryLoadStep(chapNum + 1); } : features.autoLoad._jumpToReview;
 
 
 			if ($('#GEASEMONKEYSEPARATOR' + chapNum).length === 0) { // the chapter hasn't been loaded yet
@@ -483,6 +512,19 @@ features = {
 			} else {
 				if (callback) { callback(); }
 			}
+		},
+		
+		/**
+		Jump to revie section if the user changed the review drop down list last time, only works when showing chapter drop down and auto load full is true
+		
+		*/
+		_jumpToReview: function (){
+			if(utils.getOptionValue("ReviewChapterChanged") === true) {
+				utils.setOptionValue("ReviewChapterChanged", false);
+				$([document.documentElement, document.body]).animate({
+					scrollTop: $("#review_name_value").offset().top
+				}, 100);
+			};
 		},
 
 		autoLoadLists: function( ) {
@@ -704,6 +746,7 @@ features = {
 			_innerLoad('shortenFavsFollows');
 			_innerLoad('viewLanguages', _splitWOEmptyParts('|'));
 			_innerLoad('showFirstChapterSeparator');
+			_innerLoad('usingFanFicFilter');			
 			_innerLoad('colors_shade1');
 			_innerLoad('colors_shade2');
 			_innerLoad('colors_shade3');
@@ -773,6 +816,7 @@ features = {
 			_innerSet('shortenFavsFollows');
 			_innerSet('viewLanguages', _join('|'));
 			_innerSet('showFirstChapterSeparator');
+			_innerSet('usingFanFicFilter');			
 			_innerSet('colors_shade1');
 			_innerSet('colors_shade2');
 			_innerSet('colors_shade3');
@@ -1037,6 +1081,7 @@ features = {
 								'<ul>' +
 									'<li><input id="ffto-allow-ctrl-a" type="checkbox"' + (settings.allowCtrlA ? ' checked="checked"' : '') + '/> <label for="ffto-allow-ctrl-a">Allow select all with ctrl-a</label></li>' +
 									'<li><input id="ffto-fix-links" type="checkbox"' + (settings.fixLinks ? ' checked="checked"' : '') + '/> <label for="ffto-fix-links">Change fake links to real links</label></li>' +
+									'<li><input id="ffto-using-fan-fic-filter" type="checkbox"' + (settings.usingFanFicFilter ? ' checked="checked"' : '') + '/> <label for="ffto-using-fan-fic-filter" style="max-width:450px">Indicates you are using the fanfic filter extension, and to disable filtering and list auto loading with fanfiction tools</label></li>' +
 								'</ul>' +
 								'<div>' +
 									'<label for="ffto-filters-format">Filters format:</label>' +
@@ -1073,6 +1118,20 @@ features = {
 			$('#ffto-menu .tabs .colors-tab a').click(function() { features.optionsMenu._changeTab('colors-tab'); });
 			$('#ffto-menu .tabs .word-counts-tab a').click(function() { features.optionsMenu._changeTab('word-counts-tab'); });
 			$('#ffto-menu .tabs .misc-tab a').click(function() { features.optionsMenu._changeTab('misc-tab'); });
+			$('#ffto-using-fan-fic-filter').change(function(){
+				if (this.checked === true) {
+					$('#ffto-autoload-lists').prop( "disabled", true );
+					$('#ffto-blacklisted-words').prop( "disabled", true );
+					$('#ffto-view-langs').prop( "disabled", true );
+					$('#ffto-low-word-count').prop( "disabled", true );
+				} else {
+					$('#ffto-autoload-lists').prop( "disabled", false );
+					$('#ffto-blacklisted-words').prop( "disabled", false );
+					$('#ffto-view-langs').prop( "disabled", false );
+					$('#ffto-low-word-count').prop( "disabled", false );
+				}
+			});
+			$('#ffto-using-fan-fic-filter').trigger('change');
 		},
 
 		_changeTab: function(tabToActivate) {
@@ -1118,6 +1177,8 @@ features = {
 			settings.loadAsYouGo = ($('#ffto-autoload-stories')[0].value === 'chapter');				
 			
 			settings.showFirstChapterSeparator = ($('#ffto-first-chap-sep')[0].checked);
+			settings.usingFanFicFilter = ($('#ffto-using-fan-fic-filter')[0].checked);
+			
 			settings.loadListsAsYouGo = $('#ffto-autoload-lists')[0].checked;
 			settings.markWords = $('#ffto-marked-words')[0].value.split('|');
 			settings.combineReview = $('#ffto-combine-reviews-link')[0].checked;
