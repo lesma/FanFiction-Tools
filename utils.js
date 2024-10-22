@@ -145,9 +145,18 @@ utils = {
 				return new Date(timestamp);
 			} else {
 				var parts = dateString.match("([01]?\\d)-([0-3]?\\d)-(\\d\\d)"),
-					year = (parts[3] < 50 ? '20' : '19') + parts[3],
-					month = (parts[1] - 1),
+					year = (parts[3] < 50 ? '20' : '19') + parts[3];
+				var month, day;
+				if (settings.dateFormat === 0) {
+					// US format
+					month = (parts[1] - 1);
 					day = parts[2];
+				} else {
+					// UK format
+					month = (parts[2] - 1);
+					day = parts[1];
+				}
+					
 				return new Date(year, month, day, utils.now.getHours(), utils.now.getMinutes(), utils.now.getSeconds());
 			}
 		},
@@ -159,7 +168,7 @@ utils = {
 		 */
 		formatDate: function(date) {
 			if (!date) { return ''; }
-            if (settings.dateFormat === 0) {
+            if (settings.dateFormat === 0) { // US format
                 return (date.getMonth() + 1) + settings.sep + date.getDate() + settings.sep + date.getFullYear(); // US date format
             } else {
                 return date.getDate() + settings.sep + (date.getMonth() + 1) + settings.sep + date.getFullYear(); // UK date format
@@ -231,12 +240,12 @@ utils = {
 			// compute the score.
 			var score = 0;
 			if (avgFrequecy) {
-				if (daysPassed <= 0.75 * avgFrequecy) { score = 0; }
-				else if (daysPassed < 1.1 * avgFrequecy) { score = 1; }
-				else if (daysPassed < 1.7 * avgFrequecy) { score = 2; }
-				else if (daysPassed < 2.5 * avgFrequecy) { score = 3; }
-				else if (daysPassed < 3 * avgFrequecy) { score = 4; }
-				else if (daysPassed < 5 * avgFrequecy) { score = 5; }
+				if (avgFrequecy <= 0.75) { score = 0; }
+				else if (avgFrequecy < 14) { score = 1; }
+				else if (avgFrequecy < 31) { score = 2; }
+				else if (avgFrequecy < 60) { score = 3; }
+				else if (avgFrequecy < 90) { score = 4; }
+				else if (avgFrequecy < 180) { score = 5; }
 				else { score = 6; }
 			} else {
 				if (daysPassed < 7) { score = 0; }
