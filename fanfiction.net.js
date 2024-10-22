@@ -674,7 +674,7 @@ features = {
 		utils.httpRequest({
 			url: utils.chapters.getLink(chapterNum),
 			onload: function(responseDetails) {
-				var regmatch = responseDetails.responseText.match(/<div class='storytext[^']*' id='storytext'>([\s\S]*?)<\/div>/i);
+				var regmatch = responseDetails.responseText.match(/<div class=['"]storytext[^'"]*['"] id=['"]storytext['"]>([\s\S]*?)<\/div>/i);
 				if (regmatch == null || !regmatch[1]) { utils.infoBar.setText('Error loading next page'); return; }
 
 				// calculating new maximum chapter, in case another chapter was added.

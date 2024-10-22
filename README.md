@@ -27,4 +27,5 @@ Updated jQuery
 
 v1.5.0 - 22 October 2024
 Corrected issue with not loading cover images #18
+Corrected issue with not auto loading next chapter (merge from ipaqi)
 Updated jQuery
