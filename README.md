@@ -24,3 +24,7 @@ Updated behaviour when auto load full story is true and the chapter drop down li
 Added Support for FictionPress Site
 Added support when using fanfic filter
 Updated jQuery
+
+v1.5.0 - 22 October 2024
+Corrected issue with not loading cover images #18
+Updated jQuery

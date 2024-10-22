@@ -98,6 +98,13 @@ function load() {
 	if (settings.fixLinks) {
 	    features.fixLinks();
 	}
+	
+	// Remove laxy loading of images, as this extension breaks it
+	$('img.lazy').each(function (index) {
+       var original = $(this).attr("data-original");
+	   $(this).attr("src", original);
+    })
+
 
 	// all selectors
 	var chapterNavigator = utils.getChapterNavigator(), storyTextEl = $('#storytext'), zlists = $('.z-list');
@@ -332,7 +339,10 @@ features = {
 			}
 			
 			var reviewLink = listEntry.children('a[href^="/r/"]');
-			if (settings.combineReview) { reviewLink.hide(); }
+			if (settings.combineReview) { 
+				reviewLink.hide(); 
+			}
+			
 			var reviewsUrl = reviewLink.attr('href') || '';
 
 			if (reviewsUrl === '') {
